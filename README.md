@@ -1,1 +1,1 @@
-cs5008 with Prof. Lee
+Tian Huang huang.tian2@northeastern.edu
