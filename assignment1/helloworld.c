@@ -1,10 +1,12 @@
 #include <stdio.h>
 
-// name: Jeongkyu Lee 
-// email: jeo.lee@northeastern.edu
+// name: Tian Huang
+// email: huang.tian2@northeastern.edu
+char myName[] = "Tian Huang";
+char mySemester[] = "Summer 2024";
 
 int main() {
-  printf("Hello World.  This is [YourName].\n");
-  printf("I am assignment 1 for [This Semester].\n");
+  printf("Hello World.  This is %s.\n", myName);
+  printf("I am assignment 1 for %s.\n", mySemester);
   return 0;
 }
