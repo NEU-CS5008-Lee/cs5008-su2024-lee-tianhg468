@@ -47,6 +47,7 @@ int main()
     employee_t* s = (employee_t*) malloc(n * sizeof(employee_t));
     readData(n, s);
     display(n, s);
+    free(s);
     return 0;
 }
 
