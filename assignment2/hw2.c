@@ -4,7 +4,7 @@
 #include <stdio.h>   // stardard input/output library
 #include <stdbool.h> // standard boolean library: bool, true, false
 
-#define MAXSIZE 100
+#define MAXSIZE 4
 
 bool isEmpty (int* s, int t) {
   // returns true if t = -1
@@ -44,7 +44,7 @@ int pop (int* s, int* tp) {
       return 0;
   }
   int popEle = s[*tp];
-  (*tp)--;
+  --*tp;
   return popEle;
   
 }
