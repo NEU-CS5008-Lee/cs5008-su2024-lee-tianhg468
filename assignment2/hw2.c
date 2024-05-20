@@ -4,7 +4,7 @@
 #include <stdio.h>   // stardard input/output library
 #include <stdbool.h> // standard boolean library: bool, true, false
 
-#define MAXSIZE 4
+#define MAXSIZE 100
 
 bool isEmpty (int* s, int t) {
   // returns true if t = -1
