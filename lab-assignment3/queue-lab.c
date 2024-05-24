@@ -28,22 +28,29 @@ int peek(int *arr)
         printf("Queue is empty.\n");
         return -1;
     }
-    return arr[0];
+    return arr[front+1];
 }
 
 /*---To insert the elements into the queue------*/
 void enqueue(int data, int *arr)
 {
-    //insert your code here
-
- 
+   if (isfull()) {
+        printf("Queue is full. Unable to enqueue %d\n", data);
+	return;
+   }
+   printf("Enqueued data is: %d\n", data);
+   arr[++rear] = data;
 }
 
 /*----Function to remove the elements from the queue----*/
 int dequeue(int *arr)
 {   
-    //insert your code here
-
+    if (isempty()) {
+         printf("Queue is empty. Unable to dequeue.\n");
+	 return -1;
+    }
+    int element = arr[++front];
+    return element;
 }
 
 /*---Function to display the elements of the queue-------*/
