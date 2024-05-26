@@ -1,5 +1,5 @@
-// name: <your name here>
-// email: <your email here>
+// name: Tian Huang
+// email: huang.tian2@northeastern.edu
 
 #include <stdio.h>   // stardard input/output library
 #include <stdbool.h> // standard boolean library: bool, true, false
@@ -71,7 +71,12 @@ typedef struct q {
 queue_t* newQueue() {
   queue_t* q_p;   // temp pointer to hold newly created queue
 
-  // ***** INSERT YOUR CODE HERE *****
+  q_p = (queue_t*) malloc(sizeof(queue_t));
+  if (q_p == NULL) {
+     return NULL;  
+  }
+  q_p->head_p = NULL;
+  q_p->tail_p = NULL;
   
   return q_p;
 };
@@ -80,7 +85,9 @@ queue_t* newQueue() {
 bool isEmpty(queue_t* q_p) {
   bool b = true;   // temporary bool to hold return value - initalize to default value
 
-  // ***** INSERT YOUR CODE HERE *****
+  if (q_p->head_p != NULL && q_p->tail_p != NULL) {
+      b = false;
+  }  
   
   return b;
 };
@@ -88,19 +95,24 @@ bool isEmpty(queue_t* q_p) {
 // function to add a new node with data d to tail of the queue
 void enqueue(queue_t* q_p, int d) {
   node_t* n_p = NULL; // temp node pointer
+  n_p = (node_t*) malloc(sizeof(node_t));
+    if (n_p ==  NULL) {
+     return;
+  }  
+  n_p->data = d;
   
   if (q_p != NULL) {
 
     if (isEmpty(q_p)) {
       // queue is empty so insertion is easy
-
-      // ***** INSERT YOUR CODE HERE *****
-
+      q_p->head_p = n_p;
+      q_p->tail_p = n_p;
+        
     } else {
       // queue is not empty
-
-      // ***** INSERT YOUR CODE HERE *****
-
+     q_p->tail_p->right_p = n_p;
+     n_p->left_p = q_p->tail_p;
+     q_p->tail_p = n_p;
     }    
   }
   
@@ -110,7 +122,7 @@ void enqueue(queue_t* q_p, int d) {
 // function to take the node off the head of the queue and return its value
 int dequeue(queue_t* q_p) {
   int t = -9999;      // temp int to hold return val with arbitrary error value of -9999
-  node_t* n_p = NULL; // temp node poitner
+  node_t* n_p = NULL; // temp node pointer
   
   if (q_p != NULL) {
     n_p = q_p->head_p;  // get a pointer to the head of the queue
@@ -120,14 +132,11 @@ int dequeue(queue_t* q_p) {
 
 	if (q_p->head_p  == q_p->tail_p) {      
           // only one node in the queue, clear queue head and tail 
-
-          // ***** INSERT YOUR CODE HERE *****
-	  
+          q_p->head_p = NULL;
+          q_p->tail_p = NULL;	  
 	} else {
           // mulitple nodes in queue, clean up head pointer and new head of queue
-
-	  // ***** INSERT YOUR CODE HERE *****
-	  
+	  q_p->head_p = q_p->head_p->right_p;
 	}
 	
 	freeNode(n_p);  // free up the node that was dequeued
