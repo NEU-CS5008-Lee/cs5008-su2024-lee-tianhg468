@@ -1,5 +1,5 @@
-// name: <your name here>
-// email: <your email here>
+// name: Tian Huang
+// email: huang.tian2@northeastern.edu
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -34,11 +34,21 @@ void generate_num(int* arr){
 void selection_sort_2arr(int* source, int* dest, bool* valid)
 {
   int smallest;      // current smallest element
+  int min_idx;       //index of the minimum element
 
   for (int i=0; i<LIMIT; i++) {
-
-  // INSERT YOUR CODE HERE
-
+      smallest = 101;
+      min_idx = -1;     
+      for (int j=0; j<LIMIT; j++) {
+          if (valid[j] == true && source[j] < smallest) {
+	     min_idx = j;
+	     smallest = source[j];
+	  }
+      }
+      if (min_idx != -1) {
+        dest[i] = smallest;
+        valid[min_idx] = false;
+      }
   }
 }
 
@@ -47,11 +57,20 @@ void selection_sort_1arr(int* source)
 {
   int smallest;      // current smallest element
   int temp;          // temporary for swap
+  int min_idx;	     // index of the minimum element	     
 
   for (int i=0; i<LIMIT; i++) {
-
-  // INSERT YOUR CODE HERE
-
+      min_idx= i;
+      smallest = source[min_idx];
+      for(int j=i+1; j<LIMIT; j++) {
+	 if (source[j] < smallest) {
+	   min_idx = j;
+	   smallest = source[j];
+	 }
+      }
+      temp = source[i];
+      source[i] = smallest;
+      source[min_idx] = temp;
   }
 }
 
