@@ -1,5 +1,5 @@
-// name: <your name here>
-// email: <your email here>
+// name: Tian Huang
+// email: huang.tian2@northeastern.edu
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,17 +31,42 @@ char upperChar(char c){
   }
 }
 
-
+void swap(char* data, int idx1, int idx2) {
+    int temp;
+    temp = data[idx1];
+    data[idx1] = data[idx2];
+    data[idx2] = temp;
+    return;
+}
 
 // pick pivot and then sort small and big parts 
 void quicky(char* data, int left, int right) {
-
-  // ADD YOUR CODE HERE
-
+  if (left >= right) {
+     return;
+  }
+  int size = right - left + 1;
+  int pivot = rand() % size + left;//select random number as pivot 
+  swap(data, pivot, right); //position the random pivot at the right position
+  
+  int less = left - 1;//section for numbers less than pivot
+  int more = right; //section for numbers more than pivot
+  int idx = left;
+  while (idx < more) {
+      if (upperChar(data[idx]) < upperChar(data[right])) {
+          swap(data, ++less, idx++);    
+      }
+      else if (upperChar(data[idx]) > upperChar(data[right])) {
+          swap(data, --more, idx);
+      }
+      else {
+          idx++;
+      }
+  }
+  swap(data, more, right);
+  quicky(data, left, less);
+  quicky(data, more+1, right);
   return;
 }
-
-
 
 int main(){
 

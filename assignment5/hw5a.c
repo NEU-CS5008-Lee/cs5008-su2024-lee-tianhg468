@@ -1,5 +1,5 @@
-// name: <your name here>
-// email: <your email here>
+// name: Tian Huang
+// email: huang.tian2@northeastern.edu
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,14 +36,33 @@ void mergeIt(
 	   int leftStart,
 	   int leftStop,
 	   int rightStart,
-	   int rightStop) {
-  
+	   int rightStop) {  
 
-  // ADD YOUR CODE HERE
-  
+  int size = (leftStop - leftStart + 1) + (rightStop - rightStart + 1);
+  char* newArr = (char*)malloc(size * sizeof(char));
+  int ptr1 = leftStart;
+  int ptr2 = rightStart;
+  int i=0;
+  while (ptr1 <= leftStop && ptr2 <= rightStop) {
+      if(findMin(data[ptr1], data[ptr2]) == data[ptr1]) {
+	      newArr[i++] = data[ptr1++];
+      }else {
+	      newArr[i++] = data[ptr2++];
+      } 
+  }
+  while(ptr1 <= leftStop) {
+     newArr[i++] = data[ptr1++];
+  }
+  while(ptr2 <= rightStop) {
+     newArr[i++] = data[ptr2++];
+  }
+  for (int j=0; j<size; j++) {
+     data[leftStart+j] = newArr[j];
+  }
+
+  free(newArr);
   return;
 }
-
 
 
 // break data array up into halves until down to single elements
