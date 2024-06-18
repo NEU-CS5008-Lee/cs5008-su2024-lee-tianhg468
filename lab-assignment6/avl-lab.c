@@ -1,5 +1,5 @@
-/*---enter your name here----*/
-/*---enter your email here-----*/
+//Name: Tian Huang
+//Email: huang.tian2@northeastern.edu
 
 #include<stdio.h>
 #include<stdlib.h>
@@ -44,10 +44,10 @@ Tree* initTree(){
 
 /* calculating maximum of 2 numbers*/
 int max(int a,int b){
-
      if(a>b)
          return a;
- else return b;
+     else
+         return b;
 }
 
 /* finding the height of the tree*/
@@ -127,10 +127,17 @@ void freenode(node_t *p){
 /* Insert a node like a Binary search tree, then convert it into 
    a AVL tree using four cases*/
 node_t* Insert(node_t* root, int data)
-{
-    
-    
-    //insert your code here
+{  
+    if (root == NULL) {
+       root = NewNode(data);
+       return root;
+    }
+    if (data < root->data) {
+        root->left = Insert(root->left, data);
+    }
+    else {
+        root->right = Insert(root->right, data);
+    }
 
 
     /*updating the height after insertion of the node*/
