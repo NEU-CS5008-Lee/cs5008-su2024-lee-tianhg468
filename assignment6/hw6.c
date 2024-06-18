@@ -1,5 +1,5 @@
-// name: <your name here>
-// email: <your email here>
+// name: Tian Huang
+// email: huang.tian2@northeastern.edu
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -243,27 +243,55 @@ void freeQueue(queue_t* qp) {
 // void breadthFirst (tnode_t* np) {}
 
 void preorder (tnode_t* np) {
-  // INSERT YOUR CODE HERE
+  if (np == NULL) {
+      return;
+  }
+  printf("%c", np->data);
+  preorder(np->left);
+  preorder(np->right);
 
   return;
 }
 
 void inorder (tnode_t* np) {
-  // INSERT YOUR CODE HERE
+  if (np == NULL) {
+     return;
+  }
+  inorder(np->left);
+  printf("%c", np->data);
+  inorder(np->right);
   
   return;
 }
 
 void postorder (tnode_t* np) {
-  // INSERT YOUR CODE HERE
-  
+  if (np == NULL) {
+     return;
+  }
+  postorder(np->left);
+  postorder(np->right);
+  printf("%c", np->data);
   return;
 }
 
 
 void breadthFirst (tnode_t* root) {
-  // INSERT YOUR CODE HERE
-  
+  queue_t* que = newQueue();
+  tnode_t* node = NULL;
+  if (root != NULL) {
+    enqueue(que, root);
+    while (!isEmpty(que)) {
+       node = dequeue(que);
+       printf("%c", node->data);
+       if (node->left != NULL) {
+          enqueue(que, node->left);
+       }
+       if (node->right != NULL) {
+          enqueue(que, node->right);
+       }
+    }
+  }
+
   return;
 }
 
@@ -308,7 +336,7 @@ int main() {
   preorder(rootp);
   printf("\n\n");
 
-  printf("INORDER:\n");
+ printf("INORDER:\n");
   inorder(rootp);
   printf("\n\n");
 
