@@ -1,5 +1,5 @@
-//enter your name here
-//enter your email here
+//Tian Huang
+//huang.tian2@northeastern.edu
 
 #include <stdio.h>
 #include <string.h>
@@ -8,15 +8,27 @@
 /* function to encrypt the data*/
 void encrypt(char text[], int key)
 {
-    // Add your code here
+    for (int i = 0; i<strlen(text); i++) {
+        if (text[i] >= 'a' && text[i] <= 'z') {
+            text[i] = ((text[i] - 'a' + key) % 26) + 'a';
+        }
+        else if (text[i] >= 'A' && text[i] <= 'Z') {
+            text[i] = ((text[i] - 'A' + key) % 26) + 'A';
+        }
+    }
 }
 
 /*function to decrypt the data*/
 void decrypt(char text[],int key)
 {
-    
-    // Add your code here
-    
+    for (int i = 0; i<strlen(text); i++) {
+        if (text[i] >= 'a' && text[i] <= 'z') {
+            text[i] = ((text[i] - 'a' - key + 26) % 26) + 'a';
+        }
+        else if (text[i] >= 'A' && text[i] <= 'Z') {
+            text[i] = ((text[i] - 'A' - key + 26) % 26) + 'A';
+        }
+    }
 }
 
 
