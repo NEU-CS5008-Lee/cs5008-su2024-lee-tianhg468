@@ -1,5 +1,5 @@
-// name: <your name here>
-// email: <your email here>
+// name: Tian Huang
+// email: huang.tian2@northeastern.edu
 
 // format of document is a bunch of data lines beginning with an integer (rank which we ignore)
 // then a ',' followed by a double-quoted string (city name)
@@ -62,7 +62,7 @@ int main () {
   if (fp != NULL) {
     fgets(inputLine, MAXSTRING, fp); // prime the pump for the first line
 
-    // ***** BEGIN FINTITE STATE MACHINE *****
+    // ***** BEGIN FINITE STATE MACHINE *****
     
     // STARTSTATE: digit -> S1
     // S1: digit -> S1; , -> S2
@@ -81,37 +81,97 @@ int main () {
       strcpy(temp,"");       // temp = ""
 
       if (nextChar >= strlen(inputLine)){
-	// if no input string then go to ERRORSTATE
-	state = ERRORSTATE;
+	    // if no input string then go to ERRORSTATE
+	    state = ERRORSTATE;
       } 
 
       while ((state != ERRORSTATE) && (state != ACCEPTSTATE)) {
-	switch (state) {
-	  case STARTSTATE:
+	    switch (state) {
+	     case STARTSTATE:
 	    // look a digit to confirm a valid line
-	    if (isDigit(inputLine[nextChar])) {
-	      state = S1;
-	      appendChar(temp, inputLine[nextChar]);
-	    } else {
-	      state = ERRORSTATE;
-	    }  
-	    break;
+	        if (isDigit(inputLine[nextChar])) {
+                 state = S1;
+                 appendChar(temp, inputLine[nextChar]);
+	        } else {
+	            state = ERRORSTATE;
+	        }
+            break;
 
 
 	  // ADD YOUR CODE HERE
- 
+        case S1:
+            if (isDigit(inputLine[nextChar])) {
+                appendChar(temp, inputLine[nextChar]);
+            } else if (inputLine[nextChar] == ',') {
+                state = S2;
+            } else {
+                state = ERRORSTATE;
+            }
+            break;
+
+        case S2:
+            if (inputLine[nextChar] == '"') {
+                state = S3;
+                strcpy(temp, ""); // clear temp for city name
+            } else {
+                state = ERRORSTATE;
+            }
+            break;
+
+        case S3:
+            if (inputLine[nextChar] == '"') {
+                state = S4;
+                strcpy(cityStr, temp);
+            } else {
+                appendChar(temp, inputLine[nextChar]);
+            }
+            break;
+
+        case S4:
+            if (inputLine[nextChar] == ',') {
+                state = S5;
+            } else {
+                state = ERRORSTATE;
+            }
+            break;
+
+        case S5:
+            if (inputLine[nextChar] == '"') {
+                state = S6;
+                strcpy(temp, ""); // clear temp for population
+            } else if (inputLine[nextChar] == '(') {
+                state = ACCEPTSTATE;
+                popInt = 0;
+            } else {
+                state = ERRORSTATE;
+            }
+            break;
+
+        case S6:
+            if (isDigit(inputLine[nextChar])) {
+                appendChar(temp, inputLine[nextChar]);
+            } else if (inputLine[nextChar] == ',' || inputLine[nextChar] == '"') {
+                if (inputLine[nextChar] == '"') {
+                    state = ACCEPTSTATE;
+                    char *endptr;
+                    popInt = (int)strtol(temp, &endptr, 10); // convert to int
+                }
+            } else {
+                state = ERRORSTATE;
+            }
+            break;
+
+        case ACCEPTSTATE:
+            // nothing to do - we are done!
+            break;
 	    
-	  case ACCEPTSTATE:
-	    // nothing to do - we are done!
-	    break;
-	    
-	  default:
-	    state = ERRORSTATE;
-	    break;
+	    default:
+	        state = ERRORSTATE;
+	        break;
 	} // end switch
 
-	// advance input
-	nextChar++;
+        // advance input
+        nextChar++;
 	
       }	// end while state machine loop
 
