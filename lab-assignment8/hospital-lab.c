@@ -1,6 +1,6 @@
 /* Lab Assignment for Hospital ER */
-//enter your name here
-//enter your email here
+//Name: Tian Huang
+//Email: huang.tian2@northeastern.edu
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -18,7 +18,7 @@ typedef struct node
 
 /*structure to define heap*/
 typedef struct {
-    NODE *heap;
+    NODE* heap;
     int num;
 }pq;
 
@@ -42,21 +42,39 @@ void swap(NODE *a, NODE* b){
     *b=*a;
     *a=temp;
 }
+
 /* function to shift down the node to maintain the max heap property*/
-void heapify(pq*p2,int n, int i ){
+void heapify(pq* p2, int n, int i ){
     int largest=i;/*initialize largest as the root*/
 
     int lchild=2*i+1;/*left =2*i+1*/
     int rchild=2*i+2;/*right=2*i+2*/
     /*insert your code here*/
 
+    if (lchild < n && p2->heap[lchild].priority > p2->heap[largest].priority) {
+        largest = lchild;
+    }
+
+    if (rchild < n && p2->heap[rchild].priority > p2->heap[largest].priority) {
+        largest = rchild;
+    }
+
+    if (largest != i) {
+        swap(&p2->heap[i], &p2->heap[largest]);
+        heapify(p2, n, largest);
+    }
 }
 
 /* To shift the new node (inserted at the end) up at its appropriate position in order to satisfy the max heap property */ 
 void shiftUp(pq* p2,int i)
 {
-    /*insert your code here*/
-       
+    if (i==0) {
+        return;
+    }
+    while (i != 0 && p2->heap[(i - 1) / 2].priority < p2->heap[i].priority) { // parent.priority<children.priority
+        swap(&p2->heap[i], &p2->heap[(i - 1) / 2]);
+        i = (i - 1) / 2;
+    }
     
 }
  
