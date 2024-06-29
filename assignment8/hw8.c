@@ -10,7 +10,7 @@
 #include <time.h>
 
 #define MAXSTRING 200
-#define TABLE_SIZE 400
+#define BUCKET_SIZE 400
 
 // finite state machine states
 #define STARTSTATE 0
@@ -22,6 +22,10 @@
 #define S6 6
 #define ACCEPTSTATE 10
 #define ERRORSTATE 11
+
+struct bucket* hashTable1 = NULL;
+struct bucket* hashTable2 = NULL;
+struct bucket* hashTable3 = NULL;
 
 // check if a character c is a digit
 bool isDigit(char c) {
@@ -44,57 +48,87 @@ typedef struct Node {
     char cityState[MAXSTRING];
     int population;
     struct Node* next;
-} Node;
+} Node_t;
 
-typedef struct HashTable {
-    Node* table[TABLE_SIZE];
-} HashTable;
+struct bucket{
+    Node_t* head;
+    int count; // # of nodes in a bucket
+};
 
-// Initialize hash table
-void initHashTable(HashTable* ht) {
-    for (int i = 0; i < TABLE_SIZE; i++) {
-        ht->table[i] = NULL;
+Node_t* createNode(char* cityState, int population){
+    Node_t* newNode = (Node_t*)malloc(sizeof(Node_t));
+    if (newNode == NULL) {
+        printf("Error in creating new node: memory allocation error");
+        return NULL;
     }
-}
-
-int hashFunction1(const char* str) {
-    return strlen(str) % TABLE_SIZE;
-}
-
-int hashFunction2(const char* str) {
-    int sum = 0;
-    while (*str) {
-        sum += *str;
-        str++;
-    }
-    return sum % TABLE_SIZE;
-}
-
-int hashFunction3(const char* str) {
-    if (strlen(str) < 2) return 0;
-    return (str[0] * str[1]) % TABLE_SIZE;
-}
-
-void insert(HashTable* ht, const char* cityState, int population, int (*hashFunc)(const char*)) {
-    int index = hashFunc(cityState);
-    Node* newNode = (Node*)malloc(sizeof(Node));
     strcpy(newNode->cityState, cityState);
     newNode->population = population;
-    newNode->next = ht->table[index];
-    ht->table[index] = newNode;
+    newNode->next = NULL;
+    return newNode;
 }
 
-void printHashTable(HashTable* ht) {
-    for (int i = 0; i < TABLE_SIZE; i++) {
-        if (ht->table[i] != NULL) {
-            printf("Index %d:\n", i);
-            Node* current = ht->table[i];
-            while (current != NULL) {
-                printf("  [%s]: %d\n", current->cityState, current->population);
-                current = current->next;
-            }
+int hashFunc1(char* str) {
+    return strlen(str) % BUCKET_SIZE;
+}
+
+int hashFunc2(char* str) {
+    int sum = 0;
+    for (int i=0; i<strlen(str); i++) {
+        sum += str[i];
+    }
+    return sum % BUCKET_SIZE;
+}
+
+int hashFunc3(char* str) {
+    if (strlen(str) < 2) {
+        return 0;
+    }
+    return (str[0] * str[1]) % BUCKET_SIZE;
+}
+
+void insert(struct bucket* hashTable, char* cityState, int population, int (*hashFunc)(char*)) {
+    int hashIndex = hashFunc(cityState);
+    Node_t* newNode = createNode(cityState, population);
+    // when node is empty
+    if (hashTable[hashIndex].count == 0){
+        hashTable[hashIndex].count = 1;
+        hashTable[hashIndex].head = newNode;
+    }
+    // when node has a key
+    else{
+        newNode->next = hashTable[hashIndex].head;
+        hashTable[hashIndex].head = newNode;
+        hashTable[hashIndex].count++;
+    }
+}
+
+void printHashTable(struct bucket* hashTable) {
+    Node_t* iterator;
+
+    printf("\n================== \n");
+    for (int i = 0; i<BUCKET_SIZE; i++){
+        iterator = hashTable[i].head;
+        printf("\nTable[%d] : ", i);
+        while (iterator != NULL)
+        {
+            printf("\nkey/value: [%s]/ [%d]", iterator->cityState, iterator->population);
+            iterator = iterator->next;
+        }
+        printf("\n");
+    }
+    printf("\n================== \n");
+}
+
+void freeHashTable(struct bucket* hashTable) {
+    for (int i = 0; i < BUCKET_SIZE; i++) {
+        Node_t* iterator = hashTable[i].head;
+        while (iterator != NULL) {
+            Node_t* temp = iterator;
+            iterator = iterator->next;
+            free(temp);
         }
     }
+    free(hashTable);
 }
 
 
@@ -108,10 +142,14 @@ int main () {
     int  nextChar;               // index of next character in input string
     char temp[MAXSTRING];        // temp string to build up extracted strings from input characters
 
-    HashTable ht1, ht2, ht3;
-    initHashTable(&ht1);
-    initHashTable(&ht2);
-    initHashTable(&ht3);
+    hashTable1 = (struct bucket*)malloc(BUCKET_SIZE * sizeof(struct bucket));
+    hashTable2 = (struct bucket*)malloc(BUCKET_SIZE * sizeof(struct bucket));
+    hashTable3 = (struct bucket*)malloc(BUCKET_SIZE * sizeof(struct bucket));
+
+    if (hashTable1 == NULL || hashTable2 == NULL || hashTable3 == NULL) {
+        printf("Memory allocation error\n");
+        exit(EXIT_FAILURE);
+    }
 
     FILE* fp;
     fp = fopen("pop.csv","r");
@@ -234,9 +272,9 @@ int main () {
 
             // ***** END FINITE STATE MACHINE *****
             if (state == ACCEPTSTATE) {
-                insert(&ht1, cityStr, popInt, hashFunction1);
-                insert(&ht2, cityStr, popInt, hashFunction2);
-                insert(&ht3, cityStr, popInt, hashFunction3);
+                insert(hashTable1, cityStr, popInt, hashFunc1);
+                insert(hashTable2, cityStr, popInt, hashFunc2);
+                insert(hashTable3, cityStr, popInt, hashFunc3);
             }
 
             // process the line - print out raw line and the parsed fields
@@ -253,13 +291,16 @@ int main () {
         fclose(fp);
 
         // Print hash tables
-        printf("Hash Table 1 (length of the city/state string modulo size of table):\n");
-        printHashTable(&ht1);
-        printf("\nHash Table 2 (sum of the character codes of the city/state string modulo size of table):\n");
-        printHashTable(&ht2);
-        printf("\nHash Table 3 (product of the first 2 character codes in city/state string modulo size of table):\n");
-        printHashTable(&ht3);
+        printf("***** HASH TABLE 1 *****\n");
+        printHashTable(hashTable1);
+        printf("***** HASH TABLE 2 *****\n");
+        printHashTable(hashTable2);
+        printf("***** HASH TABLE 3 ***** \n");
+        printHashTable(hashTable3);
 
+        freeHashTable(hashTable1);
+        freeHashTable(hashTable2);
+        freeHashTable(hashTable3);
 
     } else {
         printf("File not found!\n");
