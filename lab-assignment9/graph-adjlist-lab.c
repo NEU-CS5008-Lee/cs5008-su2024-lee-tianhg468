@@ -1,5 +1,5 @@
-//enter your email here
-//enter your name here
+//huang.tian2@northeastern.edu
+//Tian Huang
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
