@@ -1,5 +1,5 @@
-// name: <your name here>
-// email: <your email here>
+// name: Tian Huang
+// email: huang.tian2@northeastern.edu
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,7 +41,6 @@ int minDistance(trow_t table[], int size, bool valid[]) {
 
   vertex = -1;       // error return code
   dist = INFINITY;
-  
 
   for (i=0; i<size; i++) {
     if (valid[i] && (table[i].distance < dist)) {
@@ -155,19 +154,27 @@ int main () {
 
   // DIJKSTRA: create table T[V] = <infinity, undefined>
   // ********** INSERT YOUR CODE HERE **********
+  for (v=0; v<GSIZE; v++) {
+      T[v].distance = INFINITY;
+      T[v].lastStep = -1;
+  }
 
   // DIJKSTRA: T[source].distance = 0
   // ********** INSERT YOUR CODE HERE **********
-
+  T[0].distance = 0;
   // DIJKSTRA: Create set Q = set(V)
   // ********** INSERT YOUR CODE HERE **********
-
+  for (v=0; v<GSIZE; v++) {
+      Q[v] = true;
+  }
 
   // DIJKSTRA: while Q is not empty
   while (setNotEmpty(Q,GSIZE)) {
     // DIJKSTRA: u = min q in Q of T[q].distance
     // ********** INSERT YOUR CODE HERE **********
+    u = minDistance(T, GSIZE, Q);
 
+    //printf("minDistance is %d", u);
     // check for errors
     if (u<0) {
       printf("*** INVALID NODE FOUND while finding min distance\n");
@@ -176,27 +183,28 @@ int main () {
 
     // DIJKSTRA: S = neighbors(u)
     // ********** INSERT YOUR CODE HERE **********
+    setNeighbors(S, E, GSIZE, u);
 
-
-    // DIJKSTRA: Q = Q – u
+      // DIJKSTRA: Q = Q – u
     // ********** INSERT YOUR CODE HERE **********
-
+    removeVertex(u, Q, GSIZE);
 
     // DIJKSTRA: for each neighbor v of u (ignore vertices that we have already finished)
     for (v=0; v<GSIZE; v++) {
       if (S[v] && Q[v]) {
         // DIJKSTRA: d = T[u].distance + E[u,v]
         // ********** INSERT YOUR CODE HERE **********
-
+        d = T[u].distance + E[u][v];
 
         // DIJKSTRA: if (d < T[v].distance)
-	if (d < T[v].distance) {
+	    if (d < T[v].distance) {
   	  // DIJKSTRA: //shorter path found
   	  // DIJKSTRA: T[v].distance = d
           // ********** INSERT YOUR CODE HERE **********
-
+            T[v].distance = d;
 	  // DIJKSTRA: T[v].lastStep = u
           // ********** INSERT YOUR CODE HERE **********
+            T[v].lastStep = u;
 	}
       }
     }
@@ -205,6 +213,6 @@ int main () {
   }
 
   printTable(T, GSIZE, 0);
-   
+
   return 0;
 }
