@@ -147,7 +147,7 @@ int main() {
 
     // Add your code here to create edge_set
     for (i=0; i<VSIZE; i++) {
-        for (j=i; j<VSIZE; j++) {
+        for (j=i+1; j<VSIZE; j++) {
             if (graph[i][j] != 0 && graph[i][j] != INF) {
                 edge_set[edge_num].key = graph[i][j];
                 edge_set[edge_num].u = i;
