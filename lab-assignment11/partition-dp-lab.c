@@ -1,3 +1,5 @@
+//Tian Huang
+//huang.tian2@northeastern.edu
 
 #include<stdio.h>
 #define MAXN 45              /* largest number of books */
@@ -32,7 +34,7 @@ void print_books(int s[], int start, int end)
 {
     int i;            /* counter */
     
-    printf("\{");
+    printf("{");
     for (i=start; i<=end; i++)
         printf(" %d ",s[i]);
     printf("}\n");
@@ -82,10 +84,19 @@ void partition(int s[], int n, int k)
     /* 2 to k partitions*/
 
 
-
     /* Add your code here */
-
-
+    for (i = 2; i <= n; i++) {
+        for (j = 2; j <= k; j++) {
+            m[i][j] = MAXINT;
+            for (x = 1; x < i; x++) {
+                cost = max(m[x][j - 1], p[i] - p[x]);
+                if (cost < m[i][j]) {
+                    m[i][j] = cost;
+                    d[i][j] = x;
+                }
+            }
+        }
+    }
 
     print_matrix(m,n,k);
     printf("Partition of the books are:\n");
