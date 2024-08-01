@@ -1,5 +1,5 @@
-//Enter your name here
-//Enter your email here
+// Tian Huang
+// huang.tian2@northeastern.edu
 #include <stdio.h>
 #include <unistd.h>
 #include <pthread.h>
@@ -13,7 +13,27 @@ void *philosopher(void *x)
     int n=*a;
     
     /*-----Insert your code here----*/
-    
+
+    printf("Philosopher %d is thinking.\n", n+1);
+    //sleep(1);
+
+    // Pick up left chopstick
+    pthread_mutex_lock(&chopstick[n]);
+
+    // Pick up right chopstick
+    pthread_mutex_lock(&chopstick[(n + 1) % 5]);
+
+    // Eat
+    printf("Philosopher %d is eating using chopstick[%d] and chopstick[%d].\n", n+1, n, (n+1)%5);
+    sleep(5);
+
+    // Put down right chopstick
+    pthread_mutex_unlock(&chopstick[(n + 1) % 5]);
+
+    // Put down left chopstick
+    pthread_mutex_unlock(&chopstick[n]);
+    printf("Philosopher %d finished eating.\n", n+1);
+    return NULL;
     
 }
 
