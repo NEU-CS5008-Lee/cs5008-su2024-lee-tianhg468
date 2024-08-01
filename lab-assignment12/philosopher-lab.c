@@ -15,7 +15,6 @@ void *philosopher(void *x)
     /*-----Insert your code here----*/
 
     printf("Philosopher %d is thinking.\n", n+1);
-    //sleep(1);
 
     // Pick up left chopstick
     pthread_mutex_lock(&chopstick[n]);
@@ -32,6 +31,8 @@ void *philosopher(void *x)
 
     // Put down left chopstick
     pthread_mutex_unlock(&chopstick[n]);
+
+    // Finish eating
     printf("Philosopher %d finished eating.\n", n+1);
     return NULL;
     
